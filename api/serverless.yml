@@ -1,0 +1,19 @@
+org: williambsm
+app: abcommentapp
+service: feedycommentapp
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+plugins:
+  - serverless-offline
+
+functions:
+  createComment:
+    handler: createcomment.handler
+    events:
+      - httpApi:
+          path: /create-comment
+          method: post
