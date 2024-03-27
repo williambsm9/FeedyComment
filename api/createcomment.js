@@ -1,17 +1,23 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+
 // MongoDB connection URI
-const uri =
-  "mongodb+srv://mongodbuser:xX6wVVwX0AUMqM1f@atlascluster.eta4d9h.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
+const uri = process.env.MONGODB_URI;
 
 // Function to connect to MongoDB and create a record
 module.exports.handler = async (event) => {
   // Extract data from the event
 
   // const data = JSON.parse(event.body);
-  const { username, date, comment } = JSON.parse(event.body);
+  const { username, comment } = JSON.parse(event.body);
 
   // MongoDB Atlas connection options
-  const clientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
+  const clientOptions = {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    },
+  };
 
   // Create a new MongoClient
   const client = new MongoClient(uri, clientOptions);
@@ -21,13 +27,13 @@ module.exports.handler = async (event) => {
     await client.connect();
 
     // Access the database and collection
-    const db = client.db("user_comment");
-    const collection = db.collection("comments");
+    const db = client.db(process.env.DATABASE_NAME);
+    const collection = db.collection(process.env.COLLECTION_NAME);
 
     // Create a new record
     const record = {
       username: username,
-      date: date,
+      date: new Date().toLocaleString(),
       comment: comment,
     };
 

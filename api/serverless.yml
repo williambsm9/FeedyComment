@@ -13,7 +13,24 @@ plugins:
 functions:
   createComment:
     handler: createcomment.handler
+    timeout: 10
+    environment:
+      MONGODB_URI: mongodb+srv://mongodbuser:xX6wVVwX0AUMqM1f@atlascluster.eta4d9h.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster
+      DATABASE_NAME: user_comment
+      COLLECTION_NAME: comments
     events:
       - httpApi:
           path: /create-comment
           method: post
+
+  getComments:
+    handler: getcomments.handler
+    timeout: 15
+    environment:
+      MONGODB_URI: mongodb+srv://mongodbuser:xX6wVVwX0AUMqM1f@atlascluster.eta4d9h.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster
+      DATABASE_NAME: user_comment
+      COLLECTION_NAME: comments
+    events:
+      - httpApi:
+          path: /get-comments
+          method: get

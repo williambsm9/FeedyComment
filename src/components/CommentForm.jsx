@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-export default function CommentForm({ addComment }) {
+export default function CommentForm({ addComment, username }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [comment, setComment] = useState({
-    message: "",
+    comment: "",
+    username: username,
   });
 
   const handleFieldChange = (event) => {
@@ -28,20 +29,23 @@ export default function CommentForm({ addComment }) {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:7777", {
-        method: "POST",
-        body: JSON.stringify(comment),
-      });
+      const response = await fetch(
+        "https://iiir5hz5o6.execute-api.us-east-1.amazonaws.com/create-comment",
+        {
+          method: "POST",
+          body: JSON.stringify(comment),
+        }
+      );
       const data = await response.json();
 
       if (data.error) {
         setError(data.error);
       } else {
-        const updatedComment = { ...comment, time: data.time };
+        const updatedComment = { ...comment, date: data.record.date };
         addComment(updatedComment);
         setComment((prevState) => ({
           ...prevState,
-          message: "",
+          comment: "",
         }));
       }
     } catch (error) {
@@ -52,7 +56,7 @@ export default function CommentForm({ addComment }) {
   };
 
   const isFormValid = () => {
-    return comment.message.trim() !== "";
+    return comment.comment.trim() !== "";
   };
 
   const renderError = () => {
@@ -65,10 +69,10 @@ export default function CommentForm({ addComment }) {
         <div className="mb-4">
           <textarea
             onChange={handleFieldChange}
-            value={comment.message}
+            value={comment.comment}
             className="w-full px-4 py-2 text-gray-900 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Your Comment"
-            name="message"
+            name="comment"
             rows="5"
           />
         </div>

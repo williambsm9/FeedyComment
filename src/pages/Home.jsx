@@ -9,7 +9,7 @@ const Home = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:7777")
+    fetch("https://iiir5hz5o6.execute-api.us-east-1.amazonaws.com/get-comments")
       .then((res) => res.json())
       .then((data) => {
         setComments(data);
@@ -38,7 +38,7 @@ const Home = () => {
       <div className="flex-1 flex flex-col md:flex-row">
         <div className="md:w-1/3 px-4">
           <h6 className="text-lg">Say something about this App</h6>
-          <CommentForm addComment={addComment} />
+          <CommentForm addComment={addComment} username="William" />
         </div>
         <div className="md:w-2/3 bg-gray-900">
           <CommentList loading={loading} comments={comments} />
