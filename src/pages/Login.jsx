@@ -1,11 +1,15 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { CognitoUser, AuthenticationDetails } from "amazon-cognito-identity-js";
 import UserPool from "../UserPool";
+import { AuthContext } from "../AuthContext";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setErrorLogin] = useState("");
+  const navigate = useNavigate();
+  const { setAuthenticated, setloggedInUser } = useContext(AuthContext);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -22,15 +26,12 @@ function Login() {
 
     user.authenticateUser(authDetails, {
       onSuccess: (data) => {
-        console.log("onSuccess ", data);
+        setAuthenticated(true);
+        setloggedInUser(username);
+        navigate("/home");
       },
-
       onFailure: (err) => {
-        console.error("onFailure ", err);
-      },
-
-      newPasswordRequired: (data) => {
-        console.log("newPassworrdrequired: ", data);
+        setErrorLogin("Invalid username or password.");
       },
     });
   };
@@ -40,7 +41,7 @@ function Login() {
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg border-4 border-blue-500">
         <div className="p-8">
           <h2 className="text-3xl text-center font-bold text-gray-900">
-            Welcome to My App
+            FeedComm
           </h2>
           <form onSubmit={onSubmit} className="space-y-4 mt-8">
             <h4 className="text-xl text-center text-gray-900">
@@ -78,6 +79,7 @@ function Login() {
                 onChange={(event) => setPassword(event.target.value)}
               />
             </div>
+            {error && <div className="text-red-500 mt-4">{error}</div>}
             <div className="flex justify-between items-center">
               <button
                 type="submit"

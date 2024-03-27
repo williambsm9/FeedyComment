@@ -1,19 +1,27 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../AuthContext";
 import UserPool from "../UserPool";
 
 function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [ErrorSignup, setErrorSignup] = useState("");
+  const { setAuthenticated, setloggedInUser } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const onSubmit = (event) => {
     event.preventDefault();
 
     UserPool.signUp(username, password, [], null, (err, data) => {
       if (err) {
-        console.error(err);
+        setErrorSignup("An error occurred during signup. " + err.message);
+      } else {
+        setAuthenticated(true);
+        setloggedInUser(username);
+        navigate("/home");
       }
-      console.log(data);
     });
   };
 
@@ -22,7 +30,7 @@ function Signup() {
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg border-4 border-blue-500">
         <div className="p-8">
           <h2 className="text-3xl text-center font-bold text-gray-900">
-            Welcome to My App
+            FeedComm
           </h2>
           <form onSubmit={onSubmit} className="space-y-4 mt-8">
             <h4 className="text-xl text-center text-gray-900">
@@ -60,6 +68,9 @@ function Signup() {
                 onChange={(event) => setPassword(event.target.value)}
               />
             </div>
+            {ErrorSignup && (
+              <div className="text-red-500 mt-4">{ErrorSignup}</div>
+            )}
             <div className="flex justify-between items-center">
               <button
                 type="submit"

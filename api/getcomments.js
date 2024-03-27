@@ -3,8 +3,6 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 exports.handler = async (event) => {
   // MongoDB connection URI stored in environment variable
   const uri = process.env.MONGODB_URI;
-  // const uri =
-  //   "mongodb+srv://mongodbuser:xX6wVVwX0AUMqM1f@atlascluster.eta4d9h.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
 
   // MongoDB Atlas connection options
   const clientOptions = {
@@ -25,7 +23,7 @@ exports.handler = async (event) => {
     const collection = db.collection(process.env.COLLECTION_NAME);
 
     // Find all comments
-    const comments = await collection.find({}).toArray();
+    const comments = await collection.find({}).sort({ date: -1 }).toArray();
 
     // Close the connection to MongoDB
     await client.close();

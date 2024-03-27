@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import logo from "../logo.svg";
 import CommentList from "../components/CommentList";
 import CommentForm from "../components/CommentForm";
+import { AuthContext } from "../AuthContext";
 
 const Home = () => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { loggedInUser } = useContext(AuthContext);
 
   useEffect(() => {
     setLoading(true);
@@ -32,13 +34,13 @@ const Home = () => {
           className={`App-logo ${loading ? "Spin" : ""}`}
           alt="logo"
         />
-        <h1 className="text-3xl">Welcome to Feedy Comment</h1>
+        <h1 className="text-3xl">Welcome to FeedComm</h1>
       </header>
 
       <div className="flex-1 flex flex-col md:flex-row">
         <div className="md:w-1/3 px-4">
-          <h6 className="text-lg">Say something about this App</h6>
-          <CommentForm addComment={addComment} username="William" />
+          <h6 className="text-lg">Say something here</h6>
+          <CommentForm addComment={addComment} username={loggedInUser} />
         </div>
         <div className="md:w-2/3 bg-gray-900">
           <CommentList loading={loading} comments={comments} />

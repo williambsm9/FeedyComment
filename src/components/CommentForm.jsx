@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CommentForm({ addComment, username }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const [comment, setComment] = useState({
     comment: "",
@@ -16,6 +18,10 @@ export default function CommentForm({ addComment, username }) {
       [name]: value,
     }));
   };
+
+  function onLogoutHandleClick() {
+    navigate("/login");
+  }
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -86,6 +92,14 @@ export default function CommentForm({ addComment, username }) {
             type="submit"
           >
             {loading ? "Commenting..." : "Comment"} &#10148;
+          </button>
+        </div>
+        <div className="mb-4">
+          <button
+            onClick={onLogoutHandleClick}
+            className="w-full px-4 py-2 bg-red-500 text-white font-semibold rounded-md focus:outline-none focus:bg-blue-600"
+          >
+            Log Out &#8855;
           </button>
         </div>
       </form>
