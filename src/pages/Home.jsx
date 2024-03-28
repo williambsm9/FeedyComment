@@ -42,7 +42,7 @@ const Home = () => {
           <h6 className="text-lg">Say something here</h6>
           <CommentForm addComment={addComment} username={loggedInUser} />
         </div>
-        <div className="md:w-2/3 bg-gray-900">
+        <div className="md:w-2/3 bg-gray-900 overflow-y-auto">
           <CommentList loading={loading} comments={comments} />
         </div>
       </div>
